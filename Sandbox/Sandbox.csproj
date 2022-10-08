@@ -8,7 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Bech32\Bech32.csproj" />
+    <ProjectReference Include="..\BouncyCastle\BouncyCastle.Crypto.csproj" />
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
+    <ProjectReference Include="..\Sharprompt\Sharprompt.csproj" />
   </ItemGroup>
 
 </Project>
