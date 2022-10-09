@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Numerics;
+using System.Text;
 using NBitcoin;
 using Sandbox.Converters;
 using Sandbox.Enums;
@@ -13,6 +14,7 @@ namespace Sandbox
         static uint lucky = 0;
         static uint total = 0;
         static Stopwatch sw;
+        static QREncoder ncoder = new();
         static void Main()
         {
             IAddressConverter addressConverter;
@@ -30,20 +32,27 @@ namespace Sandbox
             passphrase = Prompt.Password("Input passphrase");
             threadCount = Prompt.Input<int>("Input number of threads", 1);
 
+            RandomUtils.UseAdditionalEntropy = true;
+            RandomUtils.AddEntropy(Encoding.UTF8.GetBytes(Prompt.Password("Add more entropy")));
 
             while (threadCount > 0)
             {
-                ThreadPool.QueueUserWorkItem((o) =>
+                Thread thrd = new(new ThreadStart(() =>
                 {
                     Seedgen generator = new(passphrase, network, HandleMessage);
                     generator.Start();
-                });
+                }));
+                thrd.Start();
                 threadCount--;
             }
             sw = new Stopwatch();
             sw.Start();
-            // Timer timer = new(PrintStats, null, 100, 1000);
-            ThreadPool.QueueUserWorkItem((o) => PrintStats());
+
+            Thread thrd2 = new(new ThreadStart(() =>
+            {
+                PrintStats();
+            }));
+            thrd2.Start();
 
             Console.ReadKey();
         }
@@ -52,7 +61,7 @@ namespace Sandbox
             while (true)
             {
                 double aps = total / sw.Elapsed.TotalSeconds;
-                Console.WriteLine( $"seedgen {lucky}/{total} {aps:0}addr/s");
+                Console.WriteLine($"seedgen {lucky}/{total} {aps:0}addr/s");
                 Thread.Sleep(700);
             }
         }
@@ -84,6 +93,7 @@ namespace Sandbox
             {
                 lucky++;
             }
+            ncoder.SaveQr(msg.Wallet);
             Console.WriteLine(msg.Wallet.Address);
         }
     }

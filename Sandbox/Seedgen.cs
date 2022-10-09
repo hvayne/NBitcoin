@@ -16,7 +16,6 @@ namespace Sandbox
         uint count = 0;
         public Seedgen(string passphrase, ENetwork network, Action<ISeedgenMessage> smthMagical)
         {
-            // questionaire here
             this.passphrase = passphrase;
             this.network = network;
             this.smthMagical = smthMagical;
@@ -29,7 +28,8 @@ namespace Sandbox
         }
         public void Start()
         {
-            ThreadPool.QueueUserWorkItem((o) => UpdateStats());
+            Thread thrd = new(UpdateStats);
+            thrd.Start();
 
             while (true)
             {

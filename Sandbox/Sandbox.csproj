@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Net.Codecrete.QrCodeGenerator" Version="2.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Bech32\Bech32.csproj" />
     <ProjectReference Include="..\BouncyCastle\BouncyCastle.Crypto.csproj" />
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
