@@ -15,9 +15,10 @@ namespace Sandbox.Converters
     {
         SHA256 shaHasher = SHA256.Create();
         RipeMD160Digest ripedHasher = new();
-        public string GetAddress(DataClass wallet)
+        KeyPath hdPath = new("44'/529'/0'/0/0");
+        public string GetAddress(ExtKey hdRoot)
         {
-            Key privateKey = wallet.HdRoot.Derive(wallet.HdPath).PrivateKey;
+            Key privateKey = hdRoot.Derive(hdPath).PrivateKey;
 
             byte[] pubkeyHash = shaHasher.ComputeHash(privateKey.PubKey.ToBytes());
 
@@ -28,6 +29,13 @@ namespace Sandbox.Converters
             string address = Bech32Engine.Encode("secret", ripedHash);
             return address;
         }
-
+        public void SetHdPath(KeyPath path)
+        {
+            hdPath = new(path.ToString());
+        }
+        public KeyPath GetHdPath()
+        {
+            return hdPath;
+        }
     }
 }

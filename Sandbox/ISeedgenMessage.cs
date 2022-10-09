@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Sandbox.Enums;
 
-namespace Sandbox.Enums
+namespace Sandbox
 {
-	public enum ENetwork
-	{
-		Bitcoin = 0,
-		SecretNetwork = 529		
-	}
+    interface ISeedgenMessage
+    {
+        EMsg GetEMsg();
+    }
 }
